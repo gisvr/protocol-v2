@@ -10,7 +10,7 @@ const { tracker } = require('@openzeppelin/test-helpers/src/balance');
 
 const { expect } = require('chai');
 
-const { eContractid, TokenContractId } = require('./base');
+const { eContractid, TokenContractId, IReserveParams } = require('./base');
 let LendingPoolAddressProvider = contract.fromArtifact(eContractid.LendingPoolAddressesProvider);
 let LendingPoolAddressesProviderRegistry = contract.fromArtifact(
   eContractid.LendingPoolAddressesProviderRegistry
@@ -133,20 +133,22 @@ describe('AAVE V2 depoly ', function () {
     //4_oracles---------
     const fallbackOracle = await PriceOracle.new();
     await addressesProvider.setPriceOracle(fallbackOracle.address);
-
-    await await fallbackOracle.setEthUsdPrice(MockUsdPriceInWei);
+    await fallbackOracle.setEthUsdPrice(MockUsdPriceInWei);
 
     const lendingRateOracle = await LendingRateOracle.new();
     await addressesProvider.setLendingRateOracle(lendingRateOracle.address);
-
     await lendingRateOracle.transferOwnership(stableAndVariableTokensHelper.address);
 
     let tokens = [],
+      symbols = [],
       aggregators = [],
       rates = [];
     for (const tokenSymbol of Object.keys(TokenContractId)) {
       let mockToken = this[tokenSymbol];
       tokens.push(mockToken.address);
+      symbols.push(tokenSymbol);
+      strategyRates.push(IReserveParams);
+
       let price = ethDecimalBN;
       await fallbackOracle.setAssetPrice(mockToken.address, price);
       let mockAggr = await MockAggregator.new(price);
@@ -167,6 +169,20 @@ describe('AAVE V2 depoly ', function () {
 
     // 5_initialize
     const testHelpers = await AaveProtocolDataProvider.new(addressesProvider.address);
+
+    await addressProvider.setPoolAdmin(aTokensAndRatesHelper.address);
+
+    let incentivesController = constants.ZERO_ADDRESS,
+      treasuryAddress = constants.ZERO_ADDRESS;
+    stableAndVariableDeployer.initDeployment(tokens, symbols, incentivesController);
+    atokenAndRatesDeployer.initDeployment(
+      tokens,
+      symbols,
+      strategyRates,
+      treasuryAddress,
+      incentivesController
+    );
+
     // initReservesByHelper -- strategy
     // await initReservesByHelper(
     //     reservesParams,

@@ -1,3 +1,7 @@
+const newLocal = 'bignumber.js';
+
+const BigNumber = require(newLocal);
+const oneRay = new BigNumber(Math.pow(10, 27));
 module.exports = {
   eContractid: {
     Example: 'Example',
@@ -71,6 +75,22 @@ module.exports = {
     YFI: 'YFI',
     UNI: 'UNI',
     ENJ: 'ENJ',
+  },
+  IReserveParams: {
+    optimalUtilizationRate: new BigNumber(0.65).multipliedBy(oneRay).toFixed(),
+    baseVariableBorrowRate: new BigNumber(0).multipliedBy(oneRay).toFixed(),
+    variableRateSlope1: new BigNumber(0.08).multipliedBy(oneRay).toFixed(),
+    variableRateSlope2: new BigNumber(1).multipliedBy(oneRay).toFixed(),
+    stableRateSlope1: new BigNumber(0.1).multipliedBy(oneRay).toFixed(),
+    stableRateSlope2: new BigNumber(1).multipliedBy(oneRay).toFixed(),
+    baseLTVAsCollateral: '8000',
+    liquidationThreshold: '8250',
+    liquidationBonus: '10500',
+    borrowingEnabled: true,
+    stableBorrowRateEnabled: true,
+    reserveDecimals: '18',
+    aTokenImpl: 'eContractid.AToken',
+    reserveFactor: '1000',
   },
 };
 
