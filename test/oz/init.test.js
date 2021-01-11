@@ -38,6 +38,8 @@ let AaveOracle = contract.fromArtifact(eContractid.AaveOracle);
 let WETH9Mocked = contract.fromArtifact(eContractid.WETH9Mocked);
 let LendingRateOracle = contract.fromArtifact(eContractid.LendingRateOracle);
 
+let AaveProtocolDataProvider = contract.fromArtifact(eContractid.AaveProtocolDataProvider);
+
 let sender = defaultSender;
 
 let percentToRay = (ratePercent) => {
@@ -162,6 +164,34 @@ describe('AAVE V2 depoly ', function () {
 
     const weth = await WETH9Mocked.new();
     await AaveOracle.new(tokens, aggregators, fallbackOracle.address, weth.address);
+
+    // 5_initialize
+    const testHelpers = await AaveProtocolDataProvider.new(addressesProvider.address);
+    // initReservesByHelper -- strategy
+    // await initReservesByHelper(
+    //     reservesParams,
+    //     protoPoolReservesAddresses,
+    //     admin,
+    //     treasuryAddress,
+    //     ZERO_ADDRESS,
+    //     verify
+    //   );
+
+    // export const initReservesByHelper = async (
+    //     reservesParams: iMultiPoolsAssets<IReserveParams>,
+    //     tokenAddresses: { [symbol: string]: tEthereumAddress },
+    //     admin: tEthereumAddress,
+    //     treasuryAddress: tEthereumAddress,
+    //     incentivesController: tEthereumAddress,
+    //     verify: boolean
+    //   ): Promise<BigNumber> => {
+
+    // export const configureReservesByHelper = async (
+    //     reservesParams: iMultiPoolsAssets<IReserveParams>,
+    //     tokenAddresses: { [symbol: string]: tEthereumAddress },
+    //     helpers: AaveProtocolDataProvider,
+    //     admin: tEthereumAddress
+    //   )
   });
 
   it('DAI, BAT, TUSD alice,bob,sender depoist 1000 ', async () => {
