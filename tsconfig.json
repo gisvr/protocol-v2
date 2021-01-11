@@ -8,7 +8,7 @@
     "noImplicitAny": false,
     "resolveJsonModule": true
   },
-  "include": ["./scripts", "./test", "./tasks"],
+  "include": ["./scripts", "./test", "./tasks", "truffle-config.js"],
   "files": [
     "./hardhat.config.ts",
     "./modules/tenderly/tenderly.d.ts",
