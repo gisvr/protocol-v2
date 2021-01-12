@@ -76,6 +76,14 @@ module.exports = {
     UNI: 'UNI',
     ENJ: 'ENJ',
   },
+  RateParams: [
+    new BigNumber(0.65).multipliedBy(oneRay).toFixed(),
+    new BigNumber(0).multipliedBy(oneRay).toFixed(),
+    new BigNumber(0.08).multipliedBy(oneRay).toFixed(),
+    new BigNumber(1).multipliedBy(oneRay).toFixed(),
+    new BigNumber(0.1).multipliedBy(oneRay).toFixed(),
+    new BigNumber(1).multipliedBy(oneRay).toFixed(),
+  ],
   IReserveParams: {
     optimalUtilizationRate: new BigNumber(0.65).multipliedBy(oneRay).toFixed(),
     baseVariableBorrowRate: new BigNumber(0).multipliedBy(oneRay).toFixed(),
