@@ -48,7 +48,7 @@ module.exports = async (deployer, network, accounts) => {
     await erc20Token.approve(lpCoreAddr, mintTotal, { from: sender });
     await erc20Token.approve(lpCoreAddr, mintTotal, { from: alice });
     await depoistToken(erc20Token, lpContract, sender, mintTotal);
-    // borrwo need collateral balance
+    // borrow need collateral balance
     await depoistToken(erc20Token, lpContract, alice, mintTotal);
     await withdrawToken(erc20Token, lpContract, sender, mintTotal);
 

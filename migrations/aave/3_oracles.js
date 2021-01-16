@@ -27,12 +27,18 @@ module.exports = async (deployer, network, accounts) => {
   for (const token of tokenList) {
     let tokenSymbol = token.symbol;
     let decimals = token.decimals;
-    await deployer.deploy(MintableERC20, tokenSymbol, tokenSymbol, decimals);
-    this[tokenSymbol] = token.obj = await MintableERC20.deployed();
-
-    this[tokenSymbol].mint(MockUsdPriceInWei.mul(new BN('10000')));
-    this[tokenSymbol].mint(MockUsdPriceInWei.mul(new BN('10000')), { from: alice });
-    this[tokenSymbol].mint(MockUsdPriceInWei.mul(new BN('10000')), { from: bob });
+    if (token.address) {
+      this[tokenSymbol] = token.obj = await MintableERC20.at(token.address);
+      let symbol = await token.obj.symbol();
+      console.log(tokenSymbol, symbol, decimals);
+      if (tokenSymbol != symbol) throw 'Mock token error!';
+    } else {
+      await deployer.deploy(MintableERC20, tokenSymbol, tokenSymbol, decimals);
+      this[tokenSymbol] = token.obj = await MintableERC20.deployed();
+      this[tokenSymbol].mint(MockUsdPriceInWei.mul(new BN('1000')));
+      this[tokenSymbol].mint(MockUsdPriceInWei.mul(new BN('1000')), { from: alice });
+      this[tokenSymbol].mint(MockUsdPriceInWei.mul(new BN('1000')), { from: bob });
+    }
   }
 
   // console.log(await this.DAI.name())

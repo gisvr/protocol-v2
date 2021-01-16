@@ -29,7 +29,7 @@ module.exports = {
         symbol: 'DAI',
         decimals: 18,
         priceEth: oneEth,
-        address: '',
+        address: '0x75b25C47D9F4a7196ef37ed1175f69C5f6840447',
         isActive: true,
         collateral: {
           //enableReserveAsCollateral(reserveAddr, "75", "80", "105")
@@ -48,9 +48,9 @@ module.exports = {
         strategy: [toRay(0.65), toRay(0), toRay(0.08), toRay(0.6), toRay(0.6), toRay(1)],
       },
       {
-        symbol: 'AAVE',
+        symbol: 'BAT',
         decimals: 18,
-        address: '',
+        address: '0x2cCA735ed9e09598f9aFDFc810e9a87a08894a61',
         priceEth: oneEth.div(10),
         isActive: true,
         collateral: {

@@ -1,6 +1,12 @@
 // test-environment.config.js
 
 module.exports = {
+  //https://docs.openzeppelin.com/test-environment/0.1/getting-started#configuration
+  node: {
+    // Options passed directly to Ganache client
+    fork: 'https://mainnet.infura.io/v3/{token}@{blocknumber}', // An url to Ethereum node to use as a source for a fork
+    unlocked_accounts: ['0xAb5801a7D398351b8bE11C439e05C5B3259aeC9B'], // Array of addresses specifying which accounts should be unlocked.
+  },
   accounts: {
     amount: 10, // Number of unlocked accounts
     ether: 20000, // Initial balance of unlocked accounts (in ether)
