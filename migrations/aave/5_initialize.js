@@ -11,6 +11,9 @@ const LendingPoolConfigurator = artifacts.require('LendingPoolConfigurator');
 const LendingPoolCollateralManager = artifacts.require('LendingPoolCollateralManager');
 
 const MockFlashLoanReceiver = artifacts.require('MockFlashLoanReceiver');
+
+const IncentivesController = artifacts.require('IncentivesController');
+
 const WETHGateway = artifacts.require('WETHGateway');
 const WETH9Mocked = artifacts.require('WETH9Mocked');
 
@@ -25,7 +28,9 @@ module.exports = async (deployer, network, accounts) => {
   let [sender, alice, bob] = accounts;
   let tokenList = global.tokenList;
   // console.log(await tokenList[0].obj.name())
-  let incentivesController = (treasuryAddress = ZERO_ADDRESS);
+  let incentivesController = await IncentivesController.deployed();
+  let treasuryAddress = sender;
+
   let addressesProvider = await LendingPoolAddressProvider.deployed();
   const lpAddress = await addressesProvider.getLendingPool();
   let lpConfAddr = await addressesProvider.getLendingPoolConfigurator();
@@ -34,7 +39,7 @@ module.exports = async (deployer, network, accounts) => {
   for (const token of tokenList) {
     let tokenAddr = token.obj.address;
     let symbol = token.symbol;
-    let incentivesAddr = incentivesController;
+    let incentivesAddr = incentivesController.address;
     let strategyRates = token.strategy;
     let reserveDecimals = token.decimals;
     // Deploy stable and variable deployers and save implementations ->await stableAndVariableTokensHelper.initDeployment(tokens, symbols, incentivesController.address)

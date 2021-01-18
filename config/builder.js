@@ -19,34 +19,8 @@ const oneEth = new BigNumber(Math.pow(10, 18));
 // }
 module.exports = {
   aaveV2: {
-    admin: '0x2E9D15d024187477F85Ac7cD7154aD8556EDb8E2',
-    interestRateMode: {
-      stable: '1',
-      variable: '2',
-    },
-    lpProvideAddr: '0xFe5E95e198C50E34519179A8CE21B3b4bF5A2A16',
     ethUsd: '380',
     tokenList: [
-      {
-        symbol: 'WBTC',
-        decimals: 8,
-        priceEth: oneEth.times(100),
-        address: '0x22474D350EC2dA53D717E30b96e9a2B7628Ede5b',
-        isActive: true,
-        collateral: {
-          baseLTVs: '8000', //资产抵押比率
-          liquidationThresholds: '8250', //清算的阈值
-          liquidationBonus: '10500', //清算奖励
-        },
-        borrow: {
-          reserveFactor: '1000',
-          stableBorrowRateEnabled: true, // 是否启用固定利率借贷
-          borrowingEnabled: true, // 是否启用借贷
-          marketBorrowRate: toRay(0.039),
-          marketLiquidityRate: toRay(0),
-        },
-        strategy: [toRay(0.65), toRay(0), toRay(0.08), toRay(0.6), toRay(0.6), toRay(1)],
-      },
       {
         symbol: 'DAI',
         decimals: 18,
@@ -72,6 +46,26 @@ module.exports = {
         decimals: 18,
         address: '0x6082731fdAba4761277Fb31299ebC782AD3bCf24',
         priceEth: oneEth.div(10),
+        isActive: true,
+        collateral: {
+          baseLTVs: '8000', //资产抵押比率
+          liquidationThresholds: '8250', //清算的阈值
+          liquidationBonus: '10500', //清算奖励
+        },
+        borrow: {
+          reserveFactor: '1000',
+          stableBorrowRateEnabled: true, // 是否启用固定利率借贷
+          borrowingEnabled: true, // 是否启用借贷
+          marketBorrowRate: toRay(0.039),
+          marketLiquidityRate: toRay(0),
+        },
+        strategy: [toRay(0.65), toRay(0), toRay(0.08), toRay(0.6), toRay(0.6), toRay(1)],
+      },
+      {
+        symbol: 'WBTC',
+        decimals: 8,
+        priceEth: oneEth.times(100),
+        address: '0x22474D350EC2dA53D717E30b96e9a2B7628Ede5b',
         isActive: true,
         collateral: {
           baseLTVs: '8000', //资产抵押比率

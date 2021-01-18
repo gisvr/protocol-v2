@@ -12,6 +12,8 @@ const LendingPool = artifacts.require('LendingPool');
 
 const LendingPoolConfigurator = artifacts.require('LendingPoolConfigurator');
 
+const IncentivesController = artifacts.require('IncentivesController');
+
 module.exports = async (deployer, network, accounts) => {
   let [sender] = accounts;
   //2_address_provider_registry---------
@@ -47,6 +49,7 @@ module.exports = async (deployer, network, accounts) => {
   const lendingPoolConfiguratorImpl = await LendingPoolConfigurator.deployed();
   // Set lending pool conf impl to Address Provider
   await addressesProvider.setLendingPoolConfiguratorImpl(lendingPoolConfiguratorImpl.address);
-  let lpConfAddr = await addressesProvider.getLendingPoolConfigurator();
-  this.lpConfiguratorProxy = await LendingPoolConfigurator.at(lpConfAddr);
+
+  // Mock
+  await deployer.deploy(IncentivesController);
 };
