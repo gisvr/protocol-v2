@@ -1,7 +1,5 @@
 // ============ Contracts ============
 
-let conf = require('../../config').private.mint;
-
 const LendingPoolAddressProvider = artifacts.require('LendingPoolAddressesProvider');
 const DefaultReserveInterestRateStrategy = artifacts.require('DefaultReserveInterestRateStrategy');
 
@@ -33,8 +31,6 @@ module.exports = async (deployer, network, accounts) => {
   let lpConfAddr = await addressesProvider.getLendingPoolConfigurator();
   let configurator = await LendingPoolConfigurator.at(lpConfAddr);
 
-  //StableDebtToken,VariableDebtToken
-  let key = 0;
   for (const token of tokenList) {
     let tokenAddr = token.obj.address;
     let symbol = token.symbol;

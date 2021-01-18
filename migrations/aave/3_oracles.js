@@ -1,6 +1,7 @@
 // ============ Contracts ============
 
-let conf = require('../../config').private.mint;
+let network = require('../../config').network;
+let conf = require('../../config')[network].aaveV2;
 
 const LendingPoolAddressProvider = artifacts.require('LendingPoolAddressesProvider');
 
@@ -30,7 +31,7 @@ module.exports = async (deployer, network, accounts) => {
     if (token.address) {
       this[tokenSymbol] = token.obj = await MintableERC20.at(token.address);
       let symbol = await token.obj.symbol();
-      console.log(tokenSymbol, symbol, decimals);
+      console.log(tokenSymbol, symbol, decimals, token.address);
       if (tokenSymbol != symbol) throw 'Mock token error!';
     } else {
       await deployer.deploy(MintableERC20, tokenSymbol, tokenSymbol, decimals);

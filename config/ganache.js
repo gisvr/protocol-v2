@@ -16,7 +16,7 @@ const oneEth = new BigNumber(Math.pow(10, 18));
 //     stableRateSlope2: toRay(1),
 // }
 module.exports = {
-  mint: {
+  aaveV2: {
     admin: '0x2E9D15d024187477F85Ac7cD7154aD8556EDb8E2',
     interestRateMode: {
       stable: '1',
@@ -32,8 +32,6 @@ module.exports = {
         address: '0x75b25C47D9F4a7196ef37ed1175f69C5f6840447',
         isActive: true,
         collateral: {
-          //enableReserveAsCollateral(reserveAddr, "75", "80", "105")
-          usageAsCollateralEnabled: false, // 是否用作抵押
           baseLTVs: '8000', //资产抵押比率
           liquidationThresholds: '8250', //清算的阈值
           liquidationBonus: '10500', //清算奖励
@@ -54,8 +52,6 @@ module.exports = {
         priceEth: oneEth.div(10),
         isActive: true,
         collateral: {
-          //enableReserveAsCollateral(reserveAddr, "75", "80", "105")
-          usageAsCollateralEnabled: false, // 是否用作抵押
           baseLTVs: '8000', //资产抵押比率
           liquidationThresholds: '8250', //清算的阈值
           liquidationBonus: '10500', //清算奖励

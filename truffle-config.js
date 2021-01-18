@@ -24,7 +24,9 @@ module.exports = {
   },
 
   networks: {
-    development: { host: '39.102.101.142', port: 8545, network_id: '*' },
+    ganache: { host: '39.102.101.142', port: 8545, network_id: '1337' }, // ganache
+    builder: { host: '47.75.58.188', port: 8545, network_id: '31337' }, // builder
+    development: { host: '47.75.58.188', port: 8545, network_id: '31337' },
 
     kovan: {
       provider: () =>
