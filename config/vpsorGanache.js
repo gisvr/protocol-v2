@@ -1,5 +1,3 @@
-const { BN } = require('ethereumjs-util');
-
 const newLocal = 'bignumber.js';
 const BigNumber = require(newLocal);
 
@@ -19,9 +17,9 @@ const oneEth = new BigNumber(Math.pow(10, 18));
 // }
 module.exports = {
   node: {
-    url: 'http://47.75.58.188:8546',
-    network_id: '31337',
-    from: '',
+    url: 'http://103.152.170.221:8545',
+    network_id: '8545',
+    from: '0x855FA758c77D68a04990E992aA4dcdeF899F654A',
   },
   aaveV2: {
     ethUsd: '380',
@@ -30,7 +28,7 @@ module.exports = {
         symbol: 'DAI',
         decimals: 18,
         priceEth: oneEth,
-        address: '0x18b9306737eaf6E8FC8e737F488a1AE077b18053',
+        address: '0x10E630EA8a999595398cfD6733abb46697DED454',
         isActive: true,
         collateral: {
           baseLTVs: '8000', //资产抵押比率
@@ -49,7 +47,7 @@ module.exports = {
       {
         symbol: 'BAT',
         decimals: 18,
-        address: '0x6082731fdAba4761277Fb31299ebC782AD3bCf24',
+        address: '0x2FCaa33F3f9C52f31C2D11fb4dB54e47B2e26996',
         priceEth: oneEth.div(10),
         isActive: true,
         collateral: {
@@ -70,7 +68,7 @@ module.exports = {
         symbol: 'WBTC',
         decimals: 8,
         priceEth: oneEth.times(100),
-        address: '0x22474D350EC2dA53D717E30b96e9a2B7628Ede5b',
+        address: '0x153E559908F764a17F08C1afa467d9D059A0A6fa',
         isActive: true,
         collateral: {
           baseLTVs: '8000', //资产抵押比率
@@ -89,7 +87,7 @@ module.exports = {
       {
         symbol: 'USDT',
         decimals: 6,
-        address: '0x12080583C4F0211eC382d33a273E6D0f9fAb0F75',
+        address: '0x628d98b16cE53C7437e0A8B303FC6C506DE901F7',
         priceEth: oneEth.div(1000),
         isActive: true,
         collateral: {
@@ -109,7 +107,7 @@ module.exports = {
       {
         symbol: 'USDC',
         decimals: 6,
-        address: '0x92cfBAB5A86631e9F1A6126b42E01A74eadA61Df',
+        address: '0xA3CE8926b4d797682841dBb928fc915710dcFd8e',
         priceEth: oneEth.div(1000),
         isActive: true,
         collateral: {
