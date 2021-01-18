@@ -32,6 +32,9 @@ describe('AAVE V2 Data ', function () {
     for (let addr of reserves) {
       let erc20Token = await nodeProvider.getAaveV2('MintableERC20', addr);
       let symbol = await erc20Token.symbol();
+      let decimals = await erc20Token.decimals();
+      console.log(symbol, decimals.toString(), erc20Token.address);
+
       this[symbol] = erc20Token;
     }
 
@@ -46,7 +49,7 @@ describe('AAVE V2 Data ', function () {
     web3 = await nodeProvider.getWeb3();
   });
 
-  it.skip('DAI API getReserveConfigurationData', async () => {
+  it('DAI API getReserveConfigurationData', async () => {
     let _token = await getTokenInfo(this.DAI);
     let reserveConfigData = await this.ApiDataProvider.getReserveConfigurationData(_token.address);
     console.log(

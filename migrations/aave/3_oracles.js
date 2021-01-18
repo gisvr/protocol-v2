@@ -21,7 +21,8 @@ let ethDecimalBN = new BN(10).pow(new BN(18));
 const MockUsdPriceInWei = new BN('1000').mul(ethDecimalBN);
 
 module.exports = async (deployer, network, accounts) => {
-  let [sender, alice, bob] = accounts;
+  let [backend, alice, bob] = accounts;
+  let sender = deployer.networks[network].from;
   let tokenList = conf.tokenList;
   global.tokenList = tokenList;
   //1_mock_tokens
@@ -36,7 +37,7 @@ module.exports = async (deployer, network, accounts) => {
     } else {
       await deployer.deploy(MintableERC20, tokenSymbol, tokenSymbol, decimals);
       this[tokenSymbol] = token.obj = await MintableERC20.deployed();
-      this[tokenSymbol].mint(MockUsdPriceInWei.mul(new BN('1000')));
+      this[tokenSymbol].mint(MockUsdPriceInWei.mul(new BN('1000')), { from: sender });
       this[tokenSymbol].mint(MockUsdPriceInWei.mul(new BN('1000')), { from: alice });
       this[tokenSymbol].mint(MockUsdPriceInWei.mul(new BN('1000')), { from: bob });
     }

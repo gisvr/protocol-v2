@@ -27,7 +27,8 @@ let repayToken = async (erc20Token, lpContract, account, mintTotal) => {
 
 module.exports = async (deployer, network, accounts) => {
   let ethDecimalBN = new BN(10).pow(new BN(18));
-  let [sender, alice, bob, liquid] = accounts;
+  let [backend, alice, bob, liquid] = accounts;
+  let sender = deployer.networks[network].from;
   let lpProviderContract = await LendingPoolAddressProvider.deployed();
   let lpAddr = await lpProviderContract.getLendingPool();
   let lpCoreAddr = lpAddr;

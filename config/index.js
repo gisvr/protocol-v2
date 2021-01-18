@@ -1,5 +1,5 @@
 module.exports = {
-  network: 'builder',
+  network: 'ganache',
   builder: require('./builder'),
   ganache: require('./ganache'),
   deploy: {

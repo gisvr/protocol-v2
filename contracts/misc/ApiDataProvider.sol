@@ -90,7 +90,8 @@ contract ApiDataProvider {
     (ltv, liquidationThreshold, liquidationBonus, , ) = configuration.getParamsMemory();
 
     //ACTIVE_MASK,FROZEN_MASK,BORROWING_MASK,STABLE_BORROWING_MASK
-    (isActive, , borrowingEnabled, stableBorrowRateEnabled) = configuration.getFlagsMemory();
+    (isActive, isFrozen, borrowingEnabled, stableBorrowRateEnabled) = configuration
+      .getFlagsMemory();
 
     usageAsCollateralEnabled = ltv != 0; // The v2 version does not have this setting
 

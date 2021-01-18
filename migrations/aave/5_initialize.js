@@ -25,7 +25,8 @@ let ethDecimalBN = new BN(10).pow(new BN(18));
 const MockUsdPriceInWei = new BN('1000').mul(ethDecimalBN);
 let ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 module.exports = async (deployer, network, accounts) => {
-  let [sender, alice, bob] = accounts;
+  // let [backend, alice, bob] = accounts;
+  let sender = deployer.networks[network].from;
   let tokenList = global.tokenList;
   // console.log(await tokenList[0].obj.name())
   let incentivesController = await IncentivesController.deployed();

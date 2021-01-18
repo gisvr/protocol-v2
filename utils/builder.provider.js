@@ -56,4 +56,8 @@ module.exports = {
   getWeb3() {
     return web3;
   },
+
+  async getChainId() {
+    return web3.eth.getChainId();
+  },
 };

@@ -1,4 +1,4 @@
-let nodeProvider = require('../../utils/builder.provider');
+let nodeProvider = require('../../utils/ganache.provider');
 
 // const BN = require('bignumber.js');
 const {
@@ -38,8 +38,9 @@ let web3, sender, alice, bob;
 
 describe('AAVE V2 Data ', function () {
   before(async () => {
+    let chainID = await nodeProvider.getChainId();
     let provider = await nodeProvider.getAaveV2('LendingPoolAddressesProvider');
-    console.log(`LendingPoolAddressesProvider %s `, provider.address);
+    console.log(`ChainID %s ,LendingPoolAddressesProvider %s `, chainID, provider.address);
 
     let lpAddr = await provider.getLendingPool();
 

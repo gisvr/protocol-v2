@@ -15,7 +15,7 @@ const LendingPoolConfigurator = artifacts.require('LendingPoolConfigurator');
 const IncentivesController = artifacts.require('IncentivesController');
 
 module.exports = async (deployer, network, accounts) => {
-  let [sender] = accounts;
+  let sender = deployer.networks[network].from;
   //2_address_provider_registry---------
   let marketId = 'Mint';
   await deployer.deploy(LendingPoolAddressProvider, marketId);

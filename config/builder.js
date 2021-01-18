@@ -18,6 +18,7 @@ const oneEth = new BigNumber(Math.pow(10, 18));
 //     stableRateSlope2: toRay(1),
 // }
 module.exports = {
+  node: { host: '47.75.58.188', port: 8545, network_id: '31337' }, // builder
   aaveV2: {
     ethUsd: '380',
     tokenList: [
