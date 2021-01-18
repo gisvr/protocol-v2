@@ -38,19 +38,19 @@ let web3, sender, alice, bob;
 
 describe('AAVE V2 Data ', function () {
   before(async () => {
-    let provider = await nodeProvider.getMint('LendingPoolAddressesProvider');
+    let provider = await nodeProvider.getAaveV2('LendingPoolAddressesProvider');
     let lpAddr = await provider.getLendingPool();
-    this.lpContractProxy = await nodeProvider.getMint('LendingPool', lpAddr);
+    this.lpContractProxy = await nodeProvider.getAaveV2('LendingPool', lpAddr);
     let reserves = await this.lpContractProxy.getReservesList();
     for (let addr of reserves) {
-      let erc20Token = await nodeProvider.getMint('MintableERC20', addr);
+      let erc20Token = await nodeProvider.getAaveV2('MintableERC20', addr);
       let symbol = await erc20Token.symbol();
       this[symbol] = erc20Token;
     }
 
     //创建一个依赖测试节点的 arp
-    let apiDataProvider = await nodeProvider.getMint('ApiDataProvider');
-    this.WETHGateway = await nodeProvider.getMint('WETHGateway');
+    let apiDataProvider = await nodeProvider.getAaveV2('ApiDataProvider');
+    this.WETHGateway = await nodeProvider.getAaveV2('WETHGateway');
 
     this.ApiDataProvider = await apiDataProvider.new(provider.address, this.WETHGateway);
 

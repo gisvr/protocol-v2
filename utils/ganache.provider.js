@@ -30,13 +30,13 @@ let getArttifact = async (path, addr) => {
 };
 
 module.exports = {
-  // async getArttifact(name,addr=false) {
-  //     let path = "/Users/liyu/github/mars/mint-protocol/build/contracts/" + name + ".json";
-  //     return getArttifact(path,addr)
-  // },
+  async getAaveV2(name, addr = false) {
+    let path = '/Users/liyu/github/defi/aave/protocol-v2/build/contracts/' + name + '.json';
+    return getArttifact(path, addr);
+  },
 
   async getMint(name, addr = false) {
-    let path = '/Users/liyu/github/defi/aave/protocol-v2/build/contracts/' + name + '.json';
+    let path = '/Users/liyu/github/mars/mint-protocol-v2/build/contracts/' + name + '.json';
     return getArttifact(path, addr);
   },
 
