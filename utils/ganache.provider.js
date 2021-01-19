@@ -1,5 +1,6 @@
 let conf = require('../config/index');
 let host = conf[conf.network].node.url;
+let sender = conf[conf.network].node.from;
 let Web3 = require('web3');
 const web3 = new Web3(host);
 let contract = require('@truffle/contract');
@@ -25,7 +26,7 @@ let getArttifact = async (path, addr) => {
   arttifact.setProvider(web3.currentProvider);
   arttifact.setWallet(web3.eth.accounts.wallet);
   arttifact.defaults({
-    from: accounts[0],
+    from: sender,
     gas: 8e6,
     gasPrice: 20e9,
   });

@@ -19,7 +19,7 @@ module.exports = {
   node: {
     url: 'http://39.102.101.142:8545',
     network_id: '1337',
-    from: '0x855FA758c77D68a04990E992aA4dcdeF899F654A',
+    from: '0x28989099Df975aCF0c6a1DB28c4A4805aE5e2FC8',
   }, // ganache
   aaveV2: {
     ethUsd: '380',
@@ -28,7 +28,7 @@ module.exports = {
         symbol: 'DAI',
         decimals: 18,
         priceEth: oneEth,
-        address: '0xD9C83Dc682C5889F4C6030dccB6203799907b7A0',
+        address: '',
         isActive: true,
         collateral: {
           baseLTVs: '8000', //资产抵押比率
@@ -47,7 +47,7 @@ module.exports = {
       {
         symbol: 'BAT',
         decimals: 18,
-        address: '0xEfc016f07a33639A2F6b90Aa3c9E8c559a4bE243',
+        address: '',
         priceEth: oneEth.div(10),
         isActive: true,
         collateral: {
@@ -68,7 +68,7 @@ module.exports = {
         symbol: 'WBTC',
         decimals: 8,
         priceEth: oneEth.times(100),
-        address: '0x2bEf0337c7a1491342083136E5251b3cD3f5d161',
+        address: '',
         isActive: true,
         collateral: {
           baseLTVs: '8000', //资产抵押比率
@@ -87,7 +87,7 @@ module.exports = {
       {
         symbol: 'USDT',
         decimals: 6,
-        address: '0x373a03e772b2aE62480507bF9c97288f66bCdA81',
+        address: '',
         priceEth: oneEth.div(1000),
         isActive: true,
         collateral: {
@@ -107,7 +107,7 @@ module.exports = {
       {
         symbol: 'USDC',
         decimals: 6,
-        address: '0x53249BBf6425C41153c0FCC7A74c2A4374eE7a3d',
+        address: '',
         priceEth: oneEth.div(1000),
         isActive: true,
         collateral: {

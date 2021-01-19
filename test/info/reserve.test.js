@@ -42,7 +42,10 @@ describe('AAVE V2 Data ', function () {
     let apiDataProvider = await nodeProvider.getAaveV2('ApiDataProvider');
 
     this.WETHGateway = await nodeProvider.getAaveV2('WETHGateway');
-    this.ApiDataProvider = await apiDataProvider.new(provider.address, this.WETHGateway.address);
+    let accounts = nodeProvider.getAccounts();
+    this.ApiDataProvider = await apiDataProvider.new(provider.address, this.WETHGateway.address, {
+      from: accounts[10],
+    });
 
     console.log('Provider %s, ApiDataProvider %s', provider.address, this.ApiDataProvider.address);
 
