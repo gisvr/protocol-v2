@@ -1,5 +1,11 @@
+// const { artifacts } = require("hardhat");
+
 const LendingPoolAddressProvider = artifacts.require('LendingPoolAddressesProvider');
 const LendingPool = artifacts.require('LendingPool');
+
+const WETHGateway = artifacts.require('WETHGateway');
+const ApiDataProvider = artifacts.require('ApiDataProvider');
+
 // let nodeProvider = require("../../utils/ganache.provider");
 
 let BN = web3.utils.BN;
@@ -26,13 +32,17 @@ let repayToken = async (erc20Token, lpContract, account, mintTotal) => {
 };
 
 module.exports = async (deployer, network, accounts) => {
-  let ethDecimalBN = new BN(10).pow(new BN(18));
-  let [backend, alice, bob, liquid] = accounts;
-  let sender = deployer.networks[network].from;
   let lpProviderContract = await LendingPoolAddressProvider.deployed();
+
+  let ethDecimalBN = new BN(10).pow(new BN(18));
+  let [sender, alice, bob, liquid] = accounts;
+  // let sender = deployer.networks[network].from;
+
   let lpAddr = await lpProviderContract.getLendingPool();
   let lpCoreAddr = lpAddr;
   let lpContract = await LendingPool.at(lpAddr);
+
+  let wETHGateway = await WETHGateway.deployed();
 
   let depositAmount = new BN(1).mul(ethDecimalBN);
   // await depoistEth(lpContract,depositAmount,bob)
@@ -48,6 +58,8 @@ module.exports = async (deployer, network, accounts) => {
     let mintTotal = await erc20Token.balanceOf(sender);
     await erc20Token.approve(lpCoreAddr, mintTotal, { from: sender });
     await erc20Token.approve(lpCoreAddr, mintTotal, { from: alice });
+
+    // console.log(symbol,mintTotal.div(reserveDecimals).toString(),erc20Token.address,lpContract.address)
     await depoistToken(erc20Token, lpContract, sender, mintTotal);
     // borrow need collateral balance
     await depoistToken(erc20Token, lpContract, alice, mintTotal);
@@ -60,10 +72,20 @@ module.exports = async (deployer, network, accounts) => {
     let bal1 = await erc20Token.balanceOf(sender);
     let bal2 = await erc20Token.balanceOf(alice);
     console.log(
-      'symbol %s sender bal %s alice bal %s',
+      '%s (%s) %s sender bal %s alice bal %s',
       token.symbol,
-      bal1.toString(),
-      bal2.toString()
+      decimals.toString(),
+      reserveAddr,
+      bal1.div(reserveDecimals).toString(),
+      bal2.div(reserveDecimals).toString()
     );
   }
+
+  await deployer.deploy(ApiDataProvider, lpProviderContract.address, wETHGateway.address);
+
+  let apiDataProvider = await ApiDataProvider.deployed();
+
+  console.log('ApiDataProvider', apiDataProvider.address);
+
+  console.log('LendingPoolAddressProvider', lpProviderContract.address);
 };

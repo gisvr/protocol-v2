@@ -1,6 +1,6 @@
 let conf = require('../config/index');
 let host = conf[conf.network].node.url;
-let sender = conf[conf.network].node.from;
+
 let Web3 = require('web3');
 const web3 = new Web3(host);
 let contract = require('@truffle/contract');
@@ -8,7 +8,7 @@ const HDWalletProvider = require('truffle-hdwallet-provider');
 let accounts = [];
 
 require('dotenv').config();
-let HD = new HDWalletProvider(process.env.MNENOMIC, host, 0, 20);
+let HD = new HDWalletProvider(process.env.MNENOMIC, host, 11, 5);
 
 let getArttifact = async (path, addr) => {
   let _chainId = await web3.eth.getChainId();
@@ -18,8 +18,10 @@ let getArttifact = async (path, addr) => {
       let priBuff = HD.wallets[val].privKey;
       let pri = '0x' + priBuff.toString('hex');
       web3.eth.accounts.wallet.add(pri);
+      console.log(val, pri);
     });
   }
+  let sender = accounts[0];
 
   let _art = require(path);
   let arttifact = contract(_art);

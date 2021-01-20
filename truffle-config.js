@@ -4,7 +4,8 @@ const conf = require('./config/index');
 require('dotenv').config();
 
 let nodeProvider = conf[conf.network].node;
-nodeProvider.provider = new HDWalletProvider(process.env.MNENOMIC, nodeProvider.url, 0, 12);
+nodeProvider.provider = new HDWalletProvider(process.env.MNENOMIC, nodeProvider.url, 10, 5);
+// nodeProvider.gas = 500e4 //"0xB71B00"; //12,000,000
 module.exports = {
   //自定义contracts目录
   // contracts_directory: "./allMyStuff/someStuff/theContractFolder",
@@ -12,15 +13,6 @@ module.exports = {
   // contracts_build_directory: "./output",
   // 自定义 deploy 目录
   migrations_directory: './migrations/aave',
-  /**
-   * Networks define how you connect to your ethereum client and let you set the
-   * defaults web3 uses to send transactions. If you don't specify one truffle
-   * will spin up a development blockchain for you on port 9545 when you
-   * run `develop` or `test`. You can ask a truffle command to use a specific
-   * network from the command line, e.g
-   *
-   * $ truffle test --network <network-name>
-   */
 
   api_keys: {
     etherscan: process.env.ETHERSCAN_KEY,

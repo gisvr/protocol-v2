@@ -21,8 +21,8 @@ let ethDecimalBN = new BN(10).pow(new BN(18));
 const MockUsdPriceInWei = new BN('1000').mul(ethDecimalBN);
 
 module.exports = async (deployer, network, accounts) => {
-  let [backend, alice, bob] = accounts;
-  let sender = deployer.networks[network].from;
+  let [sender, alice, bob] = accounts;
+  // let sender = deployer.networks[network].from;
   let tokenList = conf.tokenList;
   global.tokenList = tokenList;
   //1_mock_tokens
@@ -32,14 +32,19 @@ module.exports = async (deployer, network, accounts) => {
     if (token.address) {
       this[tokenSymbol] = token.obj = await MintableERC20.at(token.address);
       let symbol = await token.obj.symbol();
-      console.log(tokenSymbol, symbol, decimals, token.address);
+
       if (tokenSymbol != symbol) throw 'Mock token error!';
     } else {
       await deployer.deploy(MintableERC20, tokenSymbol, tokenSymbol, decimals);
       this[tokenSymbol] = token.obj = await MintableERC20.deployed();
-      this[tokenSymbol].mint(MockUsdPriceInWei.mul(new BN('1000')), { from: sender });
-      this[tokenSymbol].mint(MockUsdPriceInWei.mul(new BN('1000')), { from: alice });
-      this[tokenSymbol].mint(MockUsdPriceInWei.mul(new BN('1000')), { from: bob });
+
+      let mintTotal = new BN(10).pow(new BN(decimals));
+      mintTotal = mintTotal.mul(new BN(1e7));
+      this[tokenSymbol].mint(mintTotal, { from: sender });
+      this[tokenSymbol].mint(mintTotal, { from: alice });
+      this[tokenSymbol].mint(mintTotal, { from: bob });
+
+      // console.log(tokenSymbol, decimals, token.obj.address,mintTotal.toString());
     }
   }
 

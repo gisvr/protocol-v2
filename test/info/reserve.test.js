@@ -39,13 +39,13 @@ describe('AAVE V2 Data ', function () {
     }
 
     //创建一个依赖测试节点的 arp
-    let apiDataProvider = await nodeProvider.getAaveV2('ApiDataProvider');
+    let apiDataProvider = await nodeProvider.getAaveV2('ApiDataTest');
 
     this.WETHGateway = await nodeProvider.getAaveV2('WETHGateway');
-    let accounts = nodeProvider.getAccounts();
-    this.ApiDataProvider = await apiDataProvider.new(provider.address, this.WETHGateway.address, {
-      from: accounts[10],
-    });
+    // let accounts = nodeProvider.getAccounts();
+    // this.ApiDataProvider = await apiDataProvider.new(provider.address, this.WETHGateway.address);
+
+    this.ApiDataProvider = await nodeProvider.getAaveV2('ApiDataProvider');
 
     console.log('Provider %s, ApiDataProvider %s', provider.address, this.ApiDataProvider.address);
 
