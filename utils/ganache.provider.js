@@ -42,6 +42,8 @@ let getArttifact = async (path, addr) => {
   return arttifact;
 };
 
+// web3.eth.getChainId().then(console.log);
+
 module.exports = {
   async getAaveV2(name, addr = false) {
     let path = '/Users/liyu/github/defi/aave/protocol-v2/build/contracts/' + name + '.json';
