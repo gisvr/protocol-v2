@@ -1,5 +1,6 @@
 let conf = require('../config/index');
 let host = conf[conf.network].node.url;
+let network_id = conf[conf.network].node.network_id;
 
 let Web3 = require('web3');
 const web3 = new Web3(host);
@@ -11,7 +12,7 @@ require('dotenv').config();
 let HD = new HDWalletProvider(process.env.MNENOMIC, host, 11, 5);
 
 let getArttifact = async (path, addr) => {
-  let _chainId = await web3.eth.getChainId();
+  // let _chainId = await web3.eth.getChainId();
   if (accounts.length == 0) {
     accounts = HD.addresses;
     accounts.map((val) => {
@@ -36,8 +37,8 @@ let getArttifact = async (path, addr) => {
     return arttifact.at(addr);
   }
 
-  if (_art.networks[_chainId]) {
-    arttifact = await arttifact.at(_art.networks[_chainId].address);
+  if (_art.networks[network_id]) {
+    arttifact = await arttifact.at(_art.networks[network_id].address);
   }
   return arttifact;
 };
@@ -69,6 +70,7 @@ module.exports = {
     return accounts;
   },
   getWeb3() {
+    web3.eth.defaultAccount = accounts[0];
     return web3;
   },
   async getChainId() {

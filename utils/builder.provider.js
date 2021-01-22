@@ -54,6 +54,7 @@ module.exports = {
     return accounts;
   },
   getWeb3() {
+    web3.eth.defaultAccount = accounts[0];
     return web3;
   },
 

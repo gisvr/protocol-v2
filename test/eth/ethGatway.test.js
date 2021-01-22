@@ -28,6 +28,15 @@ let getFees = async (res) => {
   return new BN(res.receipt.gasUsed).mul(new BN(tx1.gasPrice));
 };
 
+let sendEther = async (web3Obj, to, value) => {
+  let from = web3Obj.eth.defaultAccount;
+  let nonce = await web3.eth.getTransactionCount(from);
+  // nonce = nonce+1;
+  let gas = 3e4;
+  let sendEth = { from, to, value, gas, nonce };
+  return web3Obj.eth.sendTransaction(sendEth);
+};
+
 let interestType = {
   stable: 1,
   variable: 2,
@@ -79,7 +88,34 @@ describe('AAVE V2 ETH ', function () {
     );
   });
 
-  it('borrowETH repayETH', async () => {
+  it.skip('borrowETH  approve delegation', async () => {
+    let alice = accounts[4];
+
+    let aliceBal1 = await web3.eth.getBalance(alice);
+    if (new BN(aliceBal1).lt(ethDecimalBN)) {
+      await sendEther(web3, alice, ethDecimalBN);
+    }
+    aliceBal1 = await web3.eth.getBalance(alice);
+    console.log(new BN(aliceBal1).div(ethDecimalBN).toString());
+    let ethGateWay = this.wEthGateway;
+    let borrowType = interestType.variable;
+    let bal = new BN(10).mul(ethDecimalBN);
+
+    let res = await ethGateWay.depositETH(alice, 0, { from: alice, value: ethDecimalBN });
+
+    let accountData = this.lpContractProxy.getUserAccountData(alice);
+
+    let res1 =
+      borrowType == interestType.stable
+        ? await this.stableDebtToken.approveDelegation(ethGateWay.address, bal, { from: alice })
+        : await this.variableDebtToken.approveDelegation(ethGateWay.address, bal, { from: alice });
+
+    let res2 = await ethGateWay.borrowETH(bal, borrowType, 0, { from: alice });
+    let aliceBal2 = await web3.eth.getBalance(alice);
+    console.log(aliceBal2);
+  });
+
+  it('borrowETH repayETH variable', async () => {
     let [alice] = accounts;
     let ethGateWay = this.wEthGateway;
 
