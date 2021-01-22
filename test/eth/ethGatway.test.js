@@ -28,6 +28,11 @@ let getFees = async (res) => {
   return new BN(res.receipt.gasUsed).mul(new BN(tx1.gasPrice));
 };
 
+let interestType = {
+  stable: 1,
+  variable: 2,
+};
+
 describe('AAVE V2 ETH ', function () {
   before(async () => {
     this.WETH = await nodeProvider.getAaveV2('WETH9Mocked');
@@ -78,17 +83,21 @@ describe('AAVE V2 ETH ', function () {
     let [alice] = accounts;
     let ethGateWay = this.wEthGateway;
 
+    let borrowType = interestType.variable;
+
     let bal = new BN(1).mul(ethDecimalBN);
 
     let aliceBal1 = await web3.eth.getBalance(alice);
 
-    let res1 = await this.stableDebtToken.approveDelegation(ethGateWay.address, bal, {
-      from: alice,
-    });
+    let res1 =
+      borrowType == interestType.stable
+        ? await this.stableDebtToken.approveDelegation(ethGateWay.address, bal, { from: alice })
+        : await this.variableDebtToken.approveDelegation(ethGateWay.address, bal, { from: alice });
+
     let fee1 = await getFees(res1);
 
     // stable intrest
-    let res2 = await ethGateWay.borrowETH(bal, 1, 0, { from: alice });
+    let res2 = await ethGateWay.borrowETH(bal, borrowType, 0, { from: alice });
     let fee2 = await getFees(res2);
     let aliceBal2 = await web3.eth.getBalance(alice);
 
@@ -97,7 +106,7 @@ describe('AAVE V2 ETH ', function () {
       'borrowETH bal not correct '
     );
 
-    let res3 = await ethGateWay.repayETH(bal, 1, alice, { from: alice, value: bal });
+    let res3 = await ethGateWay.repayETH(bal, borrowType, alice, { from: alice, value: bal });
 
     let fee3 = await getFees(res3);
     let aliceBal3 = await web3.eth.getBalance(alice);
