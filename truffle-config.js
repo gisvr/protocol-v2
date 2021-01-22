@@ -12,7 +12,7 @@ module.exports = {
   //自定义build目录
   // contracts_build_directory: "./output",
   // 自定义 deploy 目录
-  migrations_directory: './migrations/aave',
+  migrations_directory: './migrations/asset',
 
   api_keys: {
     etherscan: process.env.ETHERSCAN_KEY,

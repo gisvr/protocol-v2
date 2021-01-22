@@ -18,7 +18,7 @@ let getArttifact = async (path, addr) => {
       let priBuff = HD.wallets[val].privKey;
       let pri = '0x' + priBuff.toString('hex');
       web3.eth.accounts.wallet.add(pri);
-      console.log(val, pri);
+      // console.log(val, pri);
     });
   }
   let sender = accounts[0];
@@ -29,8 +29,8 @@ let getArttifact = async (path, addr) => {
   arttifact.setWallet(web3.eth.accounts.wallet);
   arttifact.defaults({
     from: sender,
-    gas: 8e6,
-    gasPrice: 20e9,
+    gas: conf.deploy.gas,
+    gasPrice: conf.deploy.gasPrice,
   });
   if (addr) {
     return arttifact.at(addr);

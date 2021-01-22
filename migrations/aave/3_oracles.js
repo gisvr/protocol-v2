@@ -1,7 +1,7 @@
 // ============ Contracts ============
 
-let network = require('../../config').network;
-let conf = require('../../config')[network].aaveV2;
+let config = require('../../config');
+let conf = config[config.network].aaveV2;
 
 const LendingPoolAddressProvider = artifacts.require('LendingPoolAddressesProvider');
 
@@ -22,7 +22,9 @@ const MockUsdPriceInWei = new BN('1000').mul(ethDecimalBN);
 
 module.exports = async (deployer, network, accounts) => {
   let [sender, alice, bob] = accounts;
-  // let sender = deployer.networks[network].from;
+
+  const weth = await WETH9Mocked.deployed();
+
   let tokenList = conf.tokenList;
   global.tokenList = tokenList;
   //1_mock_tokens
@@ -95,9 +97,5 @@ module.exports = async (deployer, network, accounts) => {
 
   await stableAndVariableTokensHelper.setOracleOwnership(lendingRateOracle.address, sender);
 
-  await deployer.deploy(WETH9Mocked);
-  const weth = await WETH9Mocked.deployed();
-
-  // console.log(tokens,aggregators,fallbackOracle.address,weth.address)
   await deployer.deploy(AaveOracle, tokens, aggregators, fallbackOracle.address, weth.address);
 };

@@ -13,6 +13,7 @@ const LendingPool = artifacts.require('LendingPool');
 const LendingPoolConfigurator = artifacts.require('LendingPoolConfigurator');
 
 const IncentivesController = artifacts.require('IncentivesController');
+const WETH9Mocked = artifacts.require('WETH9Mocked');
 
 module.exports = async (deployer, network, accounts) => {
   let sender = deployer.networks[network].from;
@@ -52,4 +53,5 @@ module.exports = async (deployer, network, accounts) => {
 
   // Mock
   await deployer.deploy(IncentivesController);
+  await deployer.deploy(WETH9Mocked);
 };

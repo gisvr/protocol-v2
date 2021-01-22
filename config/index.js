@@ -5,7 +5,7 @@ module.exports = {
   geth: require('./geth'),
   vpsorGanache: require('./vpsorGanache'),
   deploy: {
-    gas: 200e4, //gaslimit
-    gasPrice: '10e9', //10 Wei
+    gas: 800e4, //gaslimit
+    gasPrice: 20e9, //20 Wei
   },
 };

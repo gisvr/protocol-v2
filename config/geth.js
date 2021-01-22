@@ -1,5 +1,4 @@
-const newLocal = 'bignumber.js';
-const BigNumber = require(newLocal);
+const BigNumber = require('bignumber.js');
 
 let toRay = (num) => {
   const oneRay = new BigNumber(Math.pow(10, 27));

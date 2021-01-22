@@ -14,18 +14,9 @@ const MockFlashLoanReceiver = artifacts.require('MockFlashLoanReceiver');
 
 const IncentivesController = artifacts.require('IncentivesController');
 
-const WETHGateway = artifacts.require('WETHGateway');
-const WETH9Mocked = artifacts.require('WETH9Mocked');
-
 const WalletBalanceProvider = artifacts.require('WalletBalanceProvider');
 
-let BN = web3.utils.BN;
-let ethDecimalBN = new BN(10).pow(new BN(18));
-
-const MockUsdPriceInWei = new BN('1000').mul(ethDecimalBN);
-let ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
 module.exports = async (deployer, network, accounts) => {
-  // let [backend, alice, bob] = accounts;
   let sender = deployer.networks[network].from;
   let tokenList = global.tokenList;
   // console.log(await tokenList[0].obj.name())
@@ -119,8 +110,5 @@ module.exports = async (deployer, network, accounts) => {
   await addressesProvider.setLendingPoolCollateralManager(collateralManager.address);
 
   await deployer.deploy(MockFlashLoanReceiver, addressesProvider.address);
-  // await MockFlashLoanReceiver.new(addressesProvider.address);
   await deployer.deploy(WalletBalanceProvider);
-  let weth = await WETH9Mocked.deployed();
-  await deployer.deploy(WETHGateway, weth.address, lpAddress);
 };
