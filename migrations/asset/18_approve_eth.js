@@ -11,7 +11,7 @@ const WETH9Mocked = artifacts.require('WETH9Mocked');
 
 const ApiDataProvider = artifacts.require('ApiDataProvider');
 
-// let nodeProvider = require("../../utils/ganache.provider");
+let nodeProvider = require('../../utils/ganache.provider');
 
 let BN = web3.utils.BN;
 
@@ -58,11 +58,23 @@ module.exports = async (deployer, network, accounts) => {
 
   let lpAddr = await lpProviderContract.getLendingPool();
   let lpContract = await LendingPool.at(lpAddr);
+
   const weth = await WETH9Mocked.deployed();
 
   let wETHGateway = await WETHGateway.deployed();
 
   let wETHAddr = await wETHGateway.getWETHAddress();
+
+  let reserve = await lpContract.getReserveData(wETHAddr);
+
+  let stableDebtToken = await nodeProvider.getAaveV2(
+    'DebtTokenBase',
+    reserve.stableDebtTokenAddress
+  );
+  let variableDebtToken = await nodeProvider.getAaveV2(
+    'DebtTokenBase',
+    reserve.variableDebtTokenAddress
+  );
 
   if (wETHAddr != weth.address) {
     console.error(wETHAddr, weth.address);
@@ -99,13 +111,17 @@ module.exports = async (deployer, network, accounts) => {
 
   await depoistToken(wETHGateway, sender, mintTotal);
 
-  await depoistToken(wETHGateway, alice, mintTotal);
+  // await depoistToken(wETHGateway, alice, mintTotal);
 
   // await withdrawToken(wETHGateway, sender, mintTotal);
 
-  // await borrowStable(wETHGateway, alice, mintTotal);
+  await stableDebtToken.approveDelegation(wETHGateway.address, mintTotal, { from: alice });
 
-  // await borrowVariable(wETHGateway, alice, mintTotal);
+  await variableDebtToken.approveDelegation(wETHGateway.address, mintTotal, { from: alice });
+
+  await borrowStable(wETHGateway, alice, mintTotal);
+
+  await borrowVariable(wETHGateway, alice, mintTotal);
 
   // await repayVariable(wETHGateway, alice, mintTotal);
 

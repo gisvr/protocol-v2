@@ -25,22 +25,37 @@ let getArttifact = async (path, addr) => {
   let sender = accounts[0];
 
   let _art = require(path);
-  let arttifact = contract(_art);
-  arttifact.setProvider(web3.currentProvider);
-  arttifact.setWallet(web3.eth.accounts.wallet);
-  arttifact.defaults({
+  let artifact = contract(_art);
+  artifact.setProvider(web3.currentProvider);
+  artifact.setWallet(web3.eth.accounts.wallet);
+  artifact.defaults({
     from: sender,
     gas: conf.deploy.gas,
     gasPrice: conf.deploy.gasPrice,
   });
   if (addr) {
-    return arttifact.at(addr);
+    let actObj = await artifact.at(addr);
+    let abi = artifact.abi;
+    actObj.web3Obj = new artifact.web3.eth.Contract(abi, addr, {
+      from: sender,
+      gas: conf.deploy.gas,
+      gasPrice: conf.deploy.gasPrice,
+    });
+    return actObj;
   }
 
   if (_art.networks[network_id]) {
-    arttifact = await arttifact.at(_art.networks[network_id].address);
+    addr = _art.networks[network_id].address;
+    let actObj = await artifact.at(addr);
+    let abi = artifact.abi;
+    actObj.web3Obj = new artifact.web3.eth.Contract(abi, addr, {
+      from: sender,
+      gas: conf.deploy.gas,
+      gasPrice: conf.deploy.gasPrice,
+    });
+    artifact = actObj;
   }
-  return arttifact;
+  return artifact;
 };
 
 // web3.eth.getChainId().then(console.log);
