@@ -52,7 +52,11 @@ describe('AAVE V2 Data ', function () {
     let apiDataProvider = await nodeProvider.getAaveV2('ApiDataProvider');
     this.WETHGateway = await nodeProvider.getAaveV2('WETHGateway');
 
-    this.ApiDataProvider = await apiDataProvider.new(provider.address, this.WETHGateway);
+    // this.ApiDataProvider = await apiDataProvider.new(provider.address, this.WETHGateway);
+    this.ApiDataProvider = await nodeProvider.getAaveV2(
+      'ApiDataProvider',
+      '0x3E7DB2135A43aAFA2Daa508Cd343D35f13830598'
+    );
 
     web3 = await nodeProvider.getWeb3();
     accounts = await nodeProvider.getAccounts();
@@ -95,16 +99,29 @@ describe('AAVE V2 Data ', function () {
     let _token = await getTokenInfo(this.DAI);
     let userReserve = await this.ApiDataProvider.getUserReserveData(_token.address, user);
 
+    console.log('ApiDataProvider', this.ApiDataProvider.address);
+    console.log(
+      `asset %s 
+    user %s`,
+      _token.address,
+      user
+    );
+
+    // //  uint256 variableDebtBorrowBalance, //>currentBorrowBalance
+    // // uint256 stableDebtBorrowBalance, //>principalBorrowBalance
+
     console.log(
       `%s %s User Reserve Data   Decimals(%s) 
-    currentATokenBalance %s  currentBorrowBalance %s   principalBorrowBalance %s
+    currentATokenBalance %s   
+    variableDebtBorrowBalance %s 
+    stableDebtBorrowBalance %s
     variableBorrowRate %s,  stableBorrowRate %s, liquidityRate %s  usageAsCollateralEnabled %s `,
       userName,
       _token.symbol,
       _token.decimals.toString(),
       userReserve.currentATokenBalance.div(_token.decimalsPow).toString(),
-      userReserve.currentBorrowBalance.div(_token.decimalsPow).toString(),
-      userReserve.principalBorrowBalance.div(_token.decimalsPow).toString(),
+      userReserve.variableDebtBorrowBalance.div(_token.decimalsPow).toString(),
+      userReserve.stableDebtBorrowBalance.div(_token.decimalsPow).toString(),
       rayToPercent(userReserve.variableBorrowRate).toString(),
       rayToPercent(userReserve.stableBorrowRate).toString(),
       rayToPercent(userReserve.liquidityRate).toString(),

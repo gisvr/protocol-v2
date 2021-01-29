@@ -39,17 +39,28 @@ describe('AAVE V2 Data ', function () {
     }
 
     //创建一个依赖测试节点的 arp
-    let apiDataProvider = await nodeProvider.getAaveV2('ApiDataTest');
 
     this.WETHGateway = await nodeProvider.getAaveV2('WETHGateway');
     // let accounts = nodeProvider.getAccounts();
+
+    this.ApiDataProvider = await nodeProvider.getAaveV2(
+      'ApiDataProvider',
+      '0x3E7DB2135A43aAFA2Daa508Cd343D35f13830598'
+    );
     // this.ApiDataProvider = await apiDataProvider.new(provider.address, this.WETHGateway.address);
 
-    this.ApiDataProvider = await nodeProvider.getAaveV2('ApiDataProvider');
+    let reserveData = await this.ApiDataProvider.getReserveData(_token.address);
 
     console.log('Provider %s, ApiDataProvider %s', provider.address, this.ApiDataProvider.address);
 
     web3 = await nodeProvider.getWeb3();
+  });
+
+  it('DAI API   getWETHGateway', async () => {
+    let _token = await getTokenInfo(this.DAI);
+    let configData = await this.ApiDataProvider.getWETHGateway();
+
+    console.log(configData);
   });
 
   it('DAI API getReserveConfigurationData', async () => {

@@ -9,7 +9,7 @@ import {IERC20} from '../dependencies/openzeppelin/contracts/IERC20.sol';
 import {SafeMath} from '../dependencies/openzeppelin/contracts/SafeMath.sol';
 
 import {WadRayMath} from '../protocol/libraries/math/WadRayMath.sol';
-
+import {PercentageMath} from '../protocol/libraries/math/PercentageMath.sol';
 import {ILendingPoolAddressesProvider} from '../interfaces/ILendingPoolAddressesProvider.sol';
 import {ILendingPool} from '../interfaces/ILendingPool.sol';
 import {SafeERC20} from '../dependencies/openzeppelin/contracts/SafeERC20.sol';
@@ -29,24 +29,18 @@ contract ApiDataProvider {
   using Address for address;
   using SafeMath for uint256;
   using WadRayMath for uint256;
+  using PercentageMath for uint256;
   using SafeERC20 for IERC20;
   using ReserveConfiguration for DataTypes.ReserveConfigurationMap;
   using UserConfiguration for DataTypes.UserConfigurationMap;
 
   address _lendingPoolAddress;
   address _wETHGatewayAddress;
-  address _wETHAddress;
   ILendingPool _pool;
   IPriceOracleGetter _oracle;
 
   constructor(address provider, address wETHGatewayAddress) public {
     _wETHGatewayAddress = wETHGatewayAddress;
-
-    (bool success, bytes memory result) =
-      wETHGatewayAddress.call(abi.encodeWithSignature('getWETHAddress()'));
-
-    (_wETHAddress) = abi.decode(result, (address));
-
     _lendingPoolAddress = ILendingPoolAddressesProvider(provider).getLendingPool();
     _pool = ILendingPool(_lendingPoolAddress);
     _oracle = IPriceOracleGetter(ILendingPoolAddressesProvider(provider).getPriceOracle());
@@ -61,13 +55,51 @@ contract ApiDataProvider {
   }
 
   function getLendingPoolController() external view returns (address) {
-    // return ILendingPoolAddressesProvider(provider).getLendingPoolController();
-    return address(this);
+    // return ILendingPoolAddressesProvider(_lendingPoolAddress).getLendingPoolController();
   }
 
-  function getWETHGateway() external view returns (address) {
-    // return ILendingPoolAddressesProvider(provider).getLendingPoolController();
-    return _wETHGatewayAddress;
+  function getWETHGateway()
+    external
+    view
+    returns (
+      address WETHAddress,
+      address aTokenAddress,
+      address stableDebtTokenAddress,
+      address variableDebtTokenAddress,
+      address WETHGatewayAddress
+    )
+  {
+    (bool success, bytes memory result) =
+      _wETHGatewayAddress.staticcall(abi.encodeWithSignature('getWETHAddress()'));
+
+    (WETHAddress) = abi.decode(result, (address));
+
+    DataTypes.ReserveData memory reserve = _pool.getReserveData(WETHAddress);
+    aTokenAddress = reserve.aTokenAddress;
+    stableDebtTokenAddress = reserve.stableDebtTokenAddress;
+    variableDebtTokenAddress = reserve.variableDebtTokenAddress;
+    WETHGatewayAddress = _wETHGatewayAddress;
+  }
+
+  function getConfigDataByData(uint256 data, uint256 factor)
+    public
+    view
+    returns (
+      uint256 ltv,
+      uint256 liquidationThreshold,
+      uint256 liquidationBonus,
+      uint256 decimals,
+      uint256 reserveFactor,
+      uint256 factorPercent
+    )
+  {
+    DataTypes.ReserveConfigurationMap memory configuration =
+      DataTypes.ReserveConfigurationMap(data);
+    (ltv, liquidationThreshold, liquidationBonus, decimals, reserveFactor) = configuration
+      .getParamsMemory();
+
+    // uint256 foo = 20000;
+    factorPercent = factor.percentMul(reserveFactor);
   }
 
   function getReserveConfigurationData(address reserveAddr)
@@ -82,7 +114,7 @@ contract ApiDataProvider {
       bool borrowingEnabled,
       bool stableBorrowRateEnabled,
       bool isActive,
-      bool isFrozen // TODO  FROZEN
+      bool isFrozen
     )
   {
     DataTypes.ReserveConfigurationMap memory configuration = _pool.getConfiguration(reserveAddr);
@@ -135,12 +167,6 @@ contract ApiDataProvider {
 
     totalBorrowsVariable = IVariableDebtToken(reserve.variableDebtTokenAddress).scaledTotalSupply();
 
-    // (
-    //   vars.principalStableDebt,
-    //   vars.currentStableDebt,
-    //   vars.avgStableRate,
-    //   vars.stableSupplyUpdatedTimestamp
-    // )
     (, totalBorrowsStable, averageStableBorrowRate, ) = IStableDebtToken(
       reserve
         .stableDebtTokenAddress
@@ -190,8 +216,8 @@ contract ApiDataProvider {
     view
     returns (
       uint256 currentATokenBalance,
-      uint256 currentBorrowBalance,
-      uint256 principalBorrowBalance,
+      uint256 variableDebtBorrowBalance, //>currentBorrowBalance
+      uint256 stableDebtBorrowBalance, //>principalBorrowBalance
       uint256 variableBorrowRate,
       uint256 stableBorrowRate,
       uint256 liquidityRate,
@@ -217,11 +243,10 @@ contract ApiDataProvider {
     currentATokenBalance = IERC20Detailed(reserve.aTokenAddress).balanceOf(user);
     bool isBorrowing = userConf.isBorrowing(id);
     if (isBorrowing) {
-      currentBorrowBalance = IVariableDebtToken(reserve.variableDebtTokenAddress).scaledBalanceOf(
-        user
-      );
+      variableDebtBorrowBalance = IVariableDebtToken(reserve.variableDebtTokenAddress)
+        .scaledBalanceOf(user);
 
-      principalBorrowBalance = IStableDebtToken(reserve.stableDebtTokenAddress).principalBalanceOf(
+      stableDebtBorrowBalance = IStableDebtToken(reserve.stableDebtTokenAddress).principalBalanceOf(
         user
       );
     }
